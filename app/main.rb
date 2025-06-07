@@ -1,13 +1,12 @@
 @builtin_command = ["echo", "exit", "type"]
 
 def parse_command(command, args)
-    puts args
     case command
     when "type"
         if @builtin_command.include?(args[0])
             $stdout.write("#{args[0]} is a shell builtin\n")
-        elsif is_from_file?(args)
-            return
+        elsif (path = is_from_file?(args[0]))
+            $stdout.write("#{args[0]} is #{path}\n")
         else
             $stdout.write("#{args[0]}: not found\n")
         end
@@ -21,15 +20,15 @@ def parse_command(command, args)
     end
 end
 
-def is_from_file?(args)
+def is_from_file?(command)
     list_paths = ENV['PATH'].split(File::PATH_SEPARATOR)
-    find_path = list_paths.find { |path| path.include?(args[0])}
-    if !find_path.empty?
-        $stdout.write("#{args[0]} is #{find_path}\n")
-        true
-    else
-        false
+
+    list_paths.each do |directories|
+        path = File.join(directories,command)
+        return path if File.file?(path)
     end
+
+    nil
 end
 
 # Wait for user input
