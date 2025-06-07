@@ -16,7 +16,12 @@ def parse_command(command, args)
     when "exit"
         exit 0 if args[0] == "0"
     else
-        $stdout.write("#{command}: command not found\n")
+        exec = execute_program(command, args)
+        if !exec.nil?
+            system(exec, args.join(" "))
+        else
+            $stdout.write("#{command}: command not found\n")
+        end
     end
 end
 
@@ -28,6 +33,17 @@ def is_from_file?(command)
         return path if File.file?(path)
     end
 
+    nil
+end
+
+def execute_program(executable, arg)
+    list_paths = ENV['PATH'].split(File::PATH_SEPARATOR)
+    exec_arg = arg.join(" ")
+
+    list_paths.each do |directories|
+        path = File.join(directories,executable)
+        return executable if File.executable?(path)
+    end
     nil
 end
 
