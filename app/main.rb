@@ -2,5 +2,7 @@
 $stdout.write("$ ")
 
 # Wait for user input
-command, *args = gets.chomp.split(" ")
-$stdout.write("#{command}: command not found")
+while true do
+    command, *args = gets.chomp.split(" ")
+    $stdout.write("#{command}: command not found\n")
+end
