@@ -1,4 +1,4 @@
-@builtin_command = ["echo", "exit", "type"]
+@builtin_command = ["echo", "exit", "type", "pwd"]
 
 def parse_command(command, args)
     case command
@@ -13,6 +13,8 @@ def parse_command(command, args)
     when "echo"
         words = args.join(' ')
         $stdout.write("#{words}\n")
+    when "pwd"
+        $stdout.write("#{Dir.pwd}\n")
     when "exit"
         exit 0 if args[0] == "0"
     else
