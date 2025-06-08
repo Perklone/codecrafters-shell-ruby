@@ -1,4 +1,4 @@
-@builtin_command = ["echo", "exit", "type", "pwd"]
+@builtin_command = ["echo", "exit", "type", "pwd", "cd"]
 
 def parse_command(command, args)
     case command
@@ -15,6 +15,8 @@ def parse_command(command, args)
         $stdout.write("#{words}\n")
     when "pwd"
         $stdout.write("#{Dir.pwd}\n")
+    when "cd"
+        go_to_path(args[0])
     when "exit"
         exit 0 if args[0] == "0"
     else
@@ -47,6 +49,12 @@ def execute_program(executable, arg)
         return executable if File.executable?(path)
     end
     nil
+end
+
+def go_to_path(path)
+    Dir.chdir(path)
+rescue Errno::ENOENT
+    $stdout.write("cd: #{path}: No such file or directory\n")
 end
 
 # Wait for user input
