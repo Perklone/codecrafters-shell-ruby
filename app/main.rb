@@ -52,7 +52,11 @@ def execute_program(executable, arg)
 end
 
 def go_to_path(path)
-    Dir.chdir(path)
+    if path == '~'
+        Dir.chdir(ENV['HOME'])
+    else
+        Dir.chdir(path)
+    end
 rescue Errno::ENOENT
     $stdout.write("cd: #{path}: No such file or directory\n")
 end
